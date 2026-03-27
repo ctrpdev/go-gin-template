@@ -1,0 +1,34 @@
+# Binaries
+/build
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+/api_bin
+/api
+
+# Test binaries, profiling data, coverage
+*.test
+*.out
+cover.out
+
+# Environment variables
+.env
+
+# Go workspace
+go.work
+go.work.sum
+
+# Logs
+/logs/*
+!/logs/.gitkeep
+*.log
+
+# OS specific files
+.DS_Store
+.idea/
+.vscode/
+
+# Ignore Docker related files
+docker-compose.override.yml
