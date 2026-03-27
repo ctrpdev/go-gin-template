@@ -24,10 +24,18 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o api_bin .
 FROM alpine:3.19 AS prod
 
 RUN apk add --no-cache ca-certificates tzdata
+
+# Crear un usuario no-root por seguridad
+RUN addgroup -S api_group && adduser -S api_user -G api_group
+
 WORKDIR /app
 
 COPY --from=builder /app/api_bin .
 COPY --from=builder /app/migrations ./migrations
+
+# Dar permisos al usuario y usarlo
+RUN chown -R api_user:api_group /app
+USER api_user
 
 ENV ENVIRONMENT=production
 ENV SERVER_ADDRESS=:8080

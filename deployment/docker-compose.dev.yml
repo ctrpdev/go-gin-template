@@ -8,3 +8,11 @@ services:
       - ..:/app    # <--- Mapea la carpeta padre (raíz del proyecto)
     environment:
       - ENVIRONMENT=development
+
+  postgres:
+    ports:
+      - "${DB_PORT:-5433}:5432" # Expuesto solo para desarrollo (DBeaver, DataGrip, etc.)
+
+  redis:
+    ports:
+      - "${REDIS_PORT:-6380}:6379" # Expuesto solo para desarrollo (RedisInsight, etc.)
