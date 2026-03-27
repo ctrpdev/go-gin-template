@@ -1,10 +1,13 @@
+include .env
+export
+
 .PHONY: all build run test clean docker-up docker-down sqlc lint migrate-up migrate-down
 
 # Variables
 APP_NAME ?= api
 BUILD_DIR ?= build
 MAIN_FILE ?= ./cmd/api/main.go
-DB_URL ?= postgres://user:pass@localhost:5432/api_db?sslmode=disable
+DB_URL ?= postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=$(DB_SSLMODE)
 
 all: build
 
@@ -29,8 +32,11 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 # Docker
-docker-up:
-	docker-compose up -d
+docker-dev:
+	docker-compose -f deployment/docker-compose.yml -f deployment/docker-compose.dev.yml up -d --build
+
+docker-prod:
+	docker-compose -f deployment/docker-compose.yml up -d --build
 
 docker-down:
 	docker-compose down

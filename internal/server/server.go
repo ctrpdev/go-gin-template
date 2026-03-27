@@ -38,17 +38,17 @@ func New(cfg *config.Config) *Server {
 	slog.Info("Initializing server components")
 
 	// Database Connection
-	dbPool, err := database.NewPostgresPool(context.Background(), cfg.DatabaseURL)
+	dbPool, err := database.NewPostgresPool(context.Background(), cfg.GetDatabaseURL())
 	if err != nil {
 		slog.Error("Unable to connect to database", "err", err)
 		os.Exit(1)
 	}
 
 	// Run Migrations automatically on startup
-	database.RunDBMigrations("file://migrations", cfg.DatabaseURL)
+	database.RunDBMigrations("file://migrations", cfg.GetDatabaseURL())
 
 	// Redis Connection
-	rdb := database.NewRedisClient(cfg.RedisURL)
+	rdb := database.NewRedisClient(cfg.GetRedisURL())
 
 	// Dependency Injection
 	queries := db.New(dbPool)

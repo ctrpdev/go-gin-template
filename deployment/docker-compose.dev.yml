@@ -1,0 +1,10 @@
+services:
+  api:
+    build:
+      context: ..  # <--- Apunta a la raíz
+      dockerfile: deployment/Dockerfile
+      target: dev
+    volumes:
+      - ..:/app    # <--- Mapea la carpeta padre (raíz del proyecto)
+    environment:
+      - ENVIRONMENT=development

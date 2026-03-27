@@ -3,8 +3,9 @@ version: '3.8'
 services:
   api:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..  # <--- Apunta a la raíz del código Go
+      dockerfile: deployment/Dockerfile
+      target: prod
     container_name: golang_api
     restart: on-failure
     ports:
@@ -12,8 +13,14 @@ services:
     environment:
       - ENVIRONMENT=production
       - SERVER_ADDRESS=:8080
-      - DATABASE_URL=postgres://user:pass@postgres:5432/api_db?sslmode=disable
-      - REDIS_URL=redis:6379
+      - DB_HOST=postgres_db
+      - DB_PORT=5432
+      - DB_USER=user
+      - DB_PASSWORD=pass
+      - DB_NAME=api_db
+      - DB_SSLMODE=disable
+      - REDIS_HOST=redis_cache
+      - REDIS_PORT=6379
       - JWT_SECRET_KEY=${JWT_SECRET_KEY:-my_super_secret_key_prod}
     depends_on:
       - postgres
@@ -30,7 +37,7 @@ services:
       POSTGRES_PASSWORD: pass
       POSTGRES_DB: api_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -41,7 +48,7 @@ services:
     container_name: redis_cache
     restart: always
     ports:
-      - "6379:6379"
+      - "6380:6379"
     volumes:
       - redis_data:/data
     networks:
