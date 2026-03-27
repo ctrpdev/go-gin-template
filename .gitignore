@@ -32,3 +32,5 @@ go.work.sum
 
 # Ignore Docker related files
 docker-compose.override.yml
+
+EDU.md

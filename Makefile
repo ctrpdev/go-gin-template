@@ -33,7 +33,8 @@ clean:
 
 # Docker
 docker-dev:
-	docker-compose -f deployment/docker-compose.yml -f deployment/docker-compose.dev.yml up -d --build
+# 	docker-compose -f deployment/docker-compose.yml -f deployment/docker-compose.dev.yml up -d --build
+	docker compose --env-file .env -f deployment/docker-compose.yml -f deployment/docker-compose.dev.yml up -d --build
 
 docker-prod:
 	docker-compose -f deployment/docker-compose.yml up -d --build

@@ -52,7 +52,7 @@ make docker-dev
 
 A través de **Docker puro** (desde la raíz):
 ```bash
-docker compose -f deployment/docker-compose.yml -f deployment/docker-compose.dev.yml up -d --build
+docker compose --env-file .env -f deployment/docker-compose.yml -f deployment/docker-compose.dev.yml up -d --build
 ```
 
 ### 2. Entorno de Producción
