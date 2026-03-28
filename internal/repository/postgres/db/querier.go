@@ -9,9 +9,15 @@ import (
 )
 
 type Querier interface {
+	CreateNote(ctx context.Context, arg CreateNoteParams) (Note, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (CreateUserRow, error)
+	DeleteNote(ctx context.Context, id int64) error
+	GetNoteByID(ctx context.Context, id int64) (Note, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	GetUserByID(ctx context.Context, id int64) (GetUserByIDRow, error)
+	ListNotes(ctx context.Context) ([]Note, error)
+	ListUserNotes(ctx context.Context, userID int64) ([]Note, error)
+	UpdateNote(ctx context.Context, arg UpdateNoteParams) (Note, error)
 	VerifyUser(ctx context.Context, id int64) (int64, error)
 }
 

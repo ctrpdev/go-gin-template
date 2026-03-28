@@ -8,6 +8,15 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type Note struct {
+	ID        int64              `json:"id"`
+	UserID    int64              `json:"user_id"`
+	Title     string             `json:"title"`
+	Content   string             `json:"content"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+}
+
 type User struct {
 	ID           int64              `json:"id"`
 	Email        string             `json:"email"`

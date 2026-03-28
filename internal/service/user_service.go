@@ -55,7 +55,7 @@ func (s *userService) Login(ctx context.Context, email, password string) (string
 
 	// Generate Access Token (15m)
 	accessClaims := jwt.MapClaims{
-		"sub":  strconv.FormatInt(user.ID, 10),
+		"sub":  strconv.FormatInt(user.BaseModel.ID, 10),
 		"role": user.Role,
 		"jti":  accessTokenID,
 		"exp":  time.Now().Add(15 * time.Minute).Unix(),
@@ -64,14 +64,14 @@ func (s *userService) Login(ctx context.Context, email, password string) (string
 
 	// Generate Refresh Token (7d)
 	refreshClaims := jwt.MapClaims{
-		"sub": strconv.FormatInt(user.ID, 10),
+		"sub": strconv.FormatInt(user.BaseModel.ID, 10),
 		"jti": refreshTokenID,
 		"exp": time.Now().Add(7 * 24 * time.Hour).Unix(),
 	}
 	refreshToken, _ := jwt.NewWithClaims(jwt.SigningMethodHS256, refreshClaims).SignedString(s.jwtSecret)
 
 	// Persist refresh token in Redis
-	err = s.sessionRepo.StoreRefreshToken(ctx, user.ID, refreshTokenID, 7*24*time.Hour)
+	err = s.sessionRepo.StoreRefreshToken(ctx, user.BaseModel.ID, refreshTokenID, 7*24*time.Hour)
 	if err != nil {
 		return "", "", err
 	}
@@ -132,7 +132,7 @@ func (s *userService) RefreshToken(ctx context.Context, refreshToken string) (st
 	newRefreshTokenID := uuid.New().String()
 
 	accessClaims := jwt.MapClaims{
-		"sub":  strconv.FormatInt(user.ID, 10),
+		"sub":  strconv.FormatInt(user.BaseModel.ID, 10),
 		"role": user.Role,
 		"jti":  accessTokenID,
 		"exp":  time.Now().Add(15 * time.Minute).Unix(),
@@ -140,14 +140,14 @@ func (s *userService) RefreshToken(ctx context.Context, refreshToken string) (st
 	newAccessToken, _ := jwt.NewWithClaims(jwt.SigningMethodHS256, accessClaims).SignedString(s.jwtSecret)
 
 	refreshClaims := jwt.MapClaims{
-		"sub": strconv.FormatInt(user.ID, 10),
+		"sub": strconv.FormatInt(user.BaseModel.ID, 10),
 		"jti": newRefreshTokenID,
 		"exp": time.Now().Add(7 * 24 * time.Hour).Unix(),
 	}
 	newRefreshString, _ := jwt.NewWithClaims(jwt.SigningMethodHS256, refreshClaims).SignedString(s.jwtSecret)
 
 	// Persist new refresh token
-	err = s.sessionRepo.StoreRefreshToken(ctx, user.ID, newRefreshTokenID, 7*24*time.Hour)
+	err = s.sessionRepo.StoreRefreshToken(ctx, user.BaseModel.ID, newRefreshTokenID, 7*24*time.Hour)
 	if err != nil {
 		return "", "", err
 	}

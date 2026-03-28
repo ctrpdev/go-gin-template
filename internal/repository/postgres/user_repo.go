@@ -33,12 +33,14 @@ func (r *userRepository) CreateUser(ctx context.Context, email, passwordHash str
 	}
 
 	return &domain.User{
-		ID:        row.ID,
-		Email:     row.Email,
-		Role:      row.Role,
-		Verified:  row.Verified,
-		CreatedAt: row.CreatedAt.Time,
-		UpdatedAt: row.UpdatedAt.Time,
+		Email:    row.Email,
+		Role:     row.Role,
+		Verified: row.Verified,
+		BaseModel: domain.BaseModel{
+			ID:        row.ID,
+			CreatedAt: row.CreatedAt.Time,
+			UpdatedAt: row.UpdatedAt.Time,
+		},
 	}, nil
 }
 
@@ -49,13 +51,15 @@ func (r *userRepository) GetUserByEmail(ctx context.Context, email string) (*dom
 	}
 
 	return &domain.User{
-		ID:        row.ID,
-		Email:     row.Email,
-		Password:  row.PasswordHash,
-		Role:      row.Role,
-		Verified:  row.Verified,
-		CreatedAt: row.CreatedAt.Time,
-		UpdatedAt: row.UpdatedAt.Time,
+		Email:    row.Email,
+		Password: row.PasswordHash,
+		Role:     row.Role,
+		Verified: row.Verified,
+		BaseModel: domain.BaseModel{
+			ID:        row.ID,
+			CreatedAt: row.CreatedAt.Time,
+			UpdatedAt: row.UpdatedAt.Time,
+		},
 	}, nil
 }
 
@@ -77,11 +81,13 @@ func (r *userRepository) GetUserByID(ctx context.Context, id int64) (*domain.Use
 	}
 
 	return &domain.User{
-		ID:        row.ID,
-		Email:     row.Email,
-		Role:      row.Role,
-		Verified:  row.Verified,
-		CreatedAt: row.CreatedAt.Time,
-		UpdatedAt: row.UpdatedAt.Time,
+		Email:    row.Email,
+		Role:     row.Role,
+		Verified: row.Verified,
+		BaseModel: domain.BaseModel{
+			ID:        row.ID,
+			CreatedAt: row.CreatedAt.Time,
+			UpdatedAt: row.UpdatedAt.Time,
+		},
 	}, nil
 }
