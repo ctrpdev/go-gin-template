@@ -13,8 +13,8 @@
 *.dylib
 
 # Local environnment file NO deben ir al contenedor (los inyecta docker-compose o el orquestador)
-# .env
-# .env.example
+.env
+.env.example
 
 # Archivos de pruebas locales
 *.test
