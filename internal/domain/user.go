@@ -2,17 +2,14 @@ package domain
 
 import (
 	"context"
-	"time"
 )
 
 type User struct {
-	ID        int64     `json:"id"`
-	Email     string    `json:"email"`
-	Password  string    `json:"-"`
-	Role      string    `json:"role"`
-	Verified  bool      `json:"verified"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Email    string `json:"email"`
+	Password string `json:"-"`
+	Role     string `json:"role"`
+	Verified bool   `json:"verified"`
+	BaseModel
 }
 
 type UserRepository interface {
