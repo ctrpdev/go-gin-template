@@ -46,6 +46,10 @@ func (s *userService) Login(ctx context.Context, email, password string) (string
 		return "", "", errors.ErrInvalidCredentials
 	}
 
+	if !user.Verified {
+		return "", "", errors.ErrAccountNotVerified
+	}
+
 	accessTokenID := uuid.New().String()
 	refreshTokenID := uuid.New().String()
 

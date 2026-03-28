@@ -37,6 +37,8 @@ func MapDomainError(c *gin.Context, err error) {
 		c.JSON(http.StatusConflict, ResponseError{Error: err.Error()})
 	case errors.Is(err, ErrInvalidToken) || errors.Is(err, ErrTokenRevoked):
 		c.JSON(http.StatusUnauthorized, ResponseError{Error: err.Error()})
+	case errors.Is(err, ErrAccountNotVerified):
+		c.JSON(http.StatusForbidden, ResponseError{Error: err.Error()})
 
 	// 3. Cualquier error sin clasificar -> 500
 	default:

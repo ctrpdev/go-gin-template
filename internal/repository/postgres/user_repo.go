@@ -5,7 +5,10 @@ import (
 	"errors"
 
 	"api/internal/domain"
+	domainerr "api/internal/errors"
 	"api/internal/repository/postgres/db"
+
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 type userRepository struct {
@@ -22,6 +25,10 @@ func (r *userRepository) CreateUser(ctx context.Context, email, passwordHash str
 		PasswordHash: passwordHash,
 	})
 	if err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
+			return nil, domainerr.ErrUserAlreadyExists
+		}
 		return nil, err
 	}
 
