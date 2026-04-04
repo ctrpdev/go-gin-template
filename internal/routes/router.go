@@ -12,7 +12,7 @@ import (
 
 // SetupRouter inicializa el router global, aplicando middlewares generales
 // y orquestando los diferentes m�dulos de rutas de la aplicaci�n.
-func SetupRouter(userHandler *http.UserHandler, authMiddleware *middleware.AuthMiddleware) *gin.Engine {
+func SetupRouter(userHandler *http.UserHandler, noteHandler *http.NoteHandler, authMiddleware *middleware.AuthMiddleware) *gin.Engine {
 	// Usamos gin.New() en lugar de Default() para no inyectar el logger viejo
 	r := gin.New()
 
@@ -41,8 +41,8 @@ func SetupRouter(userHandler *http.UserHandler, authMiddleware *middleware.AuthM
 	// Delegar la configuración de rutas de usuario a su propio archivo
 	SetupUserRoutes(api, userHandler, authMiddleware)
 
-	// En el futuro, si tienes notas:
-	// SetupNoteRoutes(api, noteHandler, authMiddleware)
+	// Rutas de Notas
+	SetupNoteRoutes(api, noteHandler, authMiddleware)
 
 	return r
 }

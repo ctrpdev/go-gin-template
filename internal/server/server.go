@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
+	"strings"
 	"syscall"
 	"time"
 
@@ -44,8 +46,15 @@ func New(cfg *config.Config) *Server {
 		os.Exit(1)
 	}
 
-	// Run Migrations automatically on startup
-	database.RunDBMigrations("file://migrations", cfg.GetDatabaseURL())
+	// Run Migrations automatically on startup (use absolute path to avoid cwd issues)
+	if wd, err := os.Getwd(); err == nil {
+		// Ensure forward slashes for file URL
+		abs := filepath.ToSlash(wd)
+		migrationURL := "file://" + strings.TrimRight(abs, "/") + "/migrations"
+		database.RunDBMigrations(migrationURL, cfg.GetDatabaseURL())
+	} else {
+		database.RunDBMigrations("file://migrations", cfg.GetDatabaseURL())
+	}
 
 	// Redis Connection
 	rdb := database.NewRedisClient(cfg.GetRedisURL())
@@ -63,10 +72,15 @@ func New(cfg *config.Config) *Server {
 
 	userService := service.NewUserService(userRepo, sessionRepo, jwtSecret)
 	userHandler := handler.NewUserHandler(userService)
+
+	noteRepo := postgres.NewNoteRepository(queries)
+	noteService := service.NewNoteService(noteRepo)
+	noteHandler := handler.NewNoteHandler(noteService)
+
 	authMiddleware := middleware.NewAuthMiddleware(jwtSecret, sessionRepo)
 
 	// Setup Router
-	router := routes.SetupRouter(userHandler, authMiddleware)
+	router := routes.SetupRouter(userHandler, noteHandler, authMiddleware)
 
 	return &Server{
 		router: router,
